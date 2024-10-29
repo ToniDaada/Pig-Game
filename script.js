@@ -1,53 +1,78 @@
 'use strict';
-//I am selecting elements
-const score0Element = document.querySelector('#score--0');
+
+//
+const player0Element = document.querySelector('.player--0');
+const player1Element = document.querySelector('.player--1');
+// Selecting the score element of both players
+const score0Element = document.getElementById('score--0');
 const score1Element = document.getElementById('score--1');
-const scorePlayerOne = document.getElementById('current--0');
-const scorePlayerTwo = document.getElementById('current--1');
+
+// Selecting the Dice Image
 const diceElement = document.querySelector('.dice');
-const btnNew = document.querySelector('.btn--new');
-const btnHold = document.querySelector('.btn--hold');
+
+// Selecting the current scores if the two players
+const current0Element = document.getElementById('current--0');
+const current1Element = document.getElementById('current--1');
+
+// Selecting the buttons on the page
 const btnRoll = document.querySelector('.btn--roll');
+const btnHold = document.querySelector('.btn--hold');
+const btnNew = document.querySelector('.btn--new');
 
-const playerScores = [0, 0];
-
-let currentScore = 0;
-let activePlayerScore = 0;
-
-// Setting the default elements of this items to 0
-score0Element.textContent = 0;
-score1Element.textContent = 0;
-// Now we want to hide the dice
+// Add the hidden CSS class that displays the dice hidden
 diceElement.classList.add('hidden');
 
-// Adding an event listener that will listen to a click
+score0Element.textContent = 0;
+score1Element.textContent = 0;
+
+const scores = [0, 0]; //This will hold player final scores
+let currentScore = 0;
+let activePlayer = 0;
+
+const switchPlayer = function () {
+  document.getElementById(`current--${activePlayer}`).textContent = 0;
+  currentScore = 0;
+  // if active player is 0 then the new active player is 1 and vice versa
+  activePlayer = activePlayer == 0 ? 1 : 0;
+  // This toggles the player-active and changes the backgroud color
+  player0Element.classList.toggle('player--active');
+  player1Element.classList.toggle('player--active');
+};
+
 btnRoll.addEventListener('click', function () {
-  // 1. Generate a random number
-  const randomDiceRoll = Math.trunc(Math.random() * 6) + 1;
-  //   console.log(randomDiceRoll);
-  // 2. Display dice roll
+  // Generate random dice roll
+  const randomDiceRoll = Math.trunc(Math.random() * 6 + 1);
+
+  // Display dice Roll
   diceElement.classList.remove('hidden');
   diceElement.src = `dice-${randomDiceRoll}.png`;
-  // 3.Check for if the roll is 1
+
+  //   Check for rolled 1: if true,switvh to nex player
   if (randomDiceRoll !== 1) {
-    // 4. Add dice roll to current score
     currentScore = currentScore + randomDiceRoll;
-    document.getElementById(`current--${activePlayerScore}`).textContent =
+    console.log(currentScore);
+
+    document.getElementById(`current--${activePlayer}`).textContent =
       currentScore;
 
-    // scorePlayerOne.textContent = currentScore;
+    // current0Element.textContent = currentScore;
   } else {
-    currentScore = 0;
-    activePlayerScore = activePlayerScore === 0 ? 1 : 0;
-    scorePlayerTwo.textContent = currentScore;
-
-    // Switch to player two
+    // Switch to next player
+    switchPlayer();
   }
 });
-// Adding an event listener that will listen to when the hold button is clicked
+
 btnHold.addEventListener('click', function () {
-  // 5. Display current score
-  score0Element.textContent = currentScore;
-  currentScore = 0;
-  scorePlayerOne.textContent = currentScore;
+  // 1. Add current score to active player score
+  scores[activePlayer] = scores[activePlayer] + currentScore;
+  document.getElementById(`score--${activePlayer}`).textContent =
+    scores[activePlayer];
+
+  if (scores[activePlayer] >= 20) {
+    console.log('You win');
+  }
+
+  // 3. If not switch to the next player
+
+  switchPlayer();
 });
