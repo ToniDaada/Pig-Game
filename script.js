@@ -2,12 +2,17 @@
 //I am selecting elements
 const score0Element = document.querySelector('#score--0');
 const score1Element = document.getElementById('score--1');
+const scorePlayerOne = document.getElementById('current--0');
+const scorePlayerTwo = document.getElementById('current--1');
 const diceElement = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
 const btnHold = document.querySelector('.btn--hold');
 const btnRoll = document.querySelector('.btn--roll');
-const scorePlayerOne = document.getElementById('current--0');
+
+const playerScores = [0, 0];
+
 let currentScore = 0;
+let activePlayerScore = 0;
 
 // Setting the default elements of this items to 0
 score0Element.textContent = 0;
@@ -27,15 +32,22 @@ btnRoll.addEventListener('click', function () {
   if (randomDiceRoll !== 1) {
     // 4. Add dice roll to current score
     currentScore = currentScore + randomDiceRoll;
-    scorePlayerOne.textContent = currentScore;
+    document.getElementById(`current--${activePlayerScore}`).textContent =
+      currentScore;
+
+    // scorePlayerOne.textContent = currentScore;
   } else {
-    // Shift two player two
     currentScore = 0;
-    scorePlayerOne.textContent = currentScore;
+    activePlayerScore = activePlayerScore === 0 ? 1 : 0;
+    scorePlayerTwo.textContent = currentScore;
+
+    // Switch to player two
   }
 });
 // Adding an event listener that will listen to when the hold button is clicked
 btnHold.addEventListener('click', function () {
   // 5. Display current score
   score0Element.textContent = currentScore;
+  currentScore = 0;
+  scorePlayerOne.textContent = currentScore;
 });
